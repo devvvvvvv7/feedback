@@ -23,6 +23,8 @@ body {
 
 .container {
   text-align:center;
+  width: 90%;
+  max-width: 300px;
 }
 
 h1 {
@@ -31,14 +33,19 @@ h1 {
 
 button {
   display:block;
-  width:200px;
-  margin:10px auto;
+  width:100%;
+  margin:10px 0;
   padding:15px;
   font-size:18px;
   border:none;
   border-radius:12px;
   cursor:pointer;
   color:white;
+  transition:0.2s;
+}
+
+button:hover {
+  transform: scale(1.05);
 }
 
 .excellent { background:#22c55e; }
@@ -57,7 +64,7 @@ button {
 
 <body>
 
-<div class="container">
+<div class="container" id="mainUI">
   <h1>📱 Give Your Feedback</h1>
 
 <button class="excellent" onclick="send('Excellent')">🌟 Excellent</button> <button class="good" onclick="send('Good')">😊 Good</button> <button class="average" onclick="send('Average')">😐 Average</button> <button class="poor" onclick="send('Poor')">😞 Poor</button>
@@ -80,7 +87,20 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
+// 🔒 If already submitted → block UI
+if (localStorage.getItem("submitted")) {
+  document.getElementById("mainUI").innerHTML = 
+    "<h2>✅ You already submitted feedback</h2>";
+}
+
 function send(rating) {
+
+  // prevent multiple submissions
+  if (localStorage.getItem("submitted")) {
+    alert("You already submitted feedback!");
+    return;
+  }
+
   let data = {
     rating: rating,
     timestamp: Date.now(),
@@ -89,7 +109,12 @@ function send(rating) {
 
   db.ref("feedbacks").push(data);
 
-  document.getElementById("msg").innerText = "✅ Thank you!";
+  // mark as submitted
+  localStorage.setItem("submitted", "true");
+
+  // show thank you screen
+  document.getElementById("mainUI").innerHTML = 
+    "<h2>🎉 Thank You for Your Feedback!</h2>";
 }
 </script>
 
