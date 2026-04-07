@@ -156,8 +156,9 @@ button {
 </div>
 
 <div class="card">
-<button onclick="resetData()">Reset Data</button>
-</div>
+<button id="resetBtn" onclick="resetData()" style="display:none;">
+  Reset Data
+</button></div>
 
 </div>
 
@@ -267,7 +268,25 @@ QRCode.toCanvas(
   "https://devvvvvvv7.github.io/feedback/mobile.html",
   { width: 160 }
 );
-  
+
+let secret = "";
+const code = "admin";
+
+document.addEventListener("keydown", function(e) {
+  secret += e.key.toLowerCase();
+
+  if (secret.includes(code)) {
+    document.getElementById("resetBtn").style.display = "block";
+    alert("🔓 Admin Unlocked");
+    secret = "";
+  }
+
+  // keep last 5 chars only
+  if (secret.length > 5) {
+    secret = secret.slice(-5);
+  }
+});
+
 </script>
 
 </body>
