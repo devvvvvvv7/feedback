@@ -1,23 +1,21 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+
+<!-- ✅ MOBILE RESPONSIVE -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>AI Feedback Dashboard</title>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 
 <style>
 body {
   margin:0;
-  height:100vh;
-  overflow:hidden;
+  min-height:100vh;
   font-family: 'Segoe UI', sans-serif;
   background: radial-gradient(circle at top, #0f172a, #020617);
   color:white;
@@ -64,7 +62,7 @@ h1 {
 }
 
 .count.active {
-  transform:scale(1.1);
+  transform:scale(1.05);
   background:rgba(56,189,248,0.2);
 }
 
@@ -76,26 +74,10 @@ h1 {
   font-weight:bold;
 }
 
-/* QR */
-#qrcode {
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  background:white;
-  border-radius:10px;
-  padding:10px;
-}
-
-#qrcode span {
-  color:black;
-  font-size:14px;
-  margin-bottom:5px;
-}
-
 /* CHART */
 .chart-box {
   flex:2;
+  min-height:250px;
 }
 
 canvas {
@@ -105,7 +87,7 @@ canvas {
 
 /* BUTTON */
 button {
-  padding:8px;
+  padding:10px;
   border:none;
   border-radius:8px;
   background:#ef4444;
@@ -113,11 +95,55 @@ button {
   cursor:pointer;
 }
 
-#qrCanvas {
-  width: 150px !important;
-  height: 150px !important;
-  display: block;
-  margin: 10px auto;
+/* QR IMAGE */
+#qrImage {
+  width:100%;
+  max-width:250px;
+  height:auto;
+  display:block;
+  margin:10px auto;
+  border-radius:10px;
+}
+
+/* 📱 MOBILE */
+@media (max-width: 768px) {
+
+  .main {
+    flex-direction: column;
+    padding:8px;
+  }
+
+  h1 {
+    font-size:18px;
+  }
+
+  .card {
+    padding:12px;
+  }
+
+  #qrImage {
+    max-width:200px;
+  }
+
+  .chart-box {
+    min-height:200px;
+  }
+}
+
+/* 📱 SMALL DEVICES */
+@media (max-width: 480px) {
+
+  h1 {
+    font-size:16px;
+  }
+
+  .count {
+    font-size:14px;
+  }
+
+  #qrImage {
+    max-width:160px;
+  }
 }
 </style>
 
@@ -144,7 +170,7 @@ button {
 
 <div class="card">
   <span style="display:block; text-align:center;">📱 Scan to Give Feedback</span>
-  <canvas id="qrCanvas"></canvas>
+  <img src="qr.png" id="qrImage">
 </div>
 
 </div>
@@ -158,7 +184,8 @@ button {
 <div class="card">
 <button id="resetBtn" onclick="resetData()" style="display:none;">
   Reset Data
-</button></div>
+</button>
+</div>
 
 </div>
 
@@ -263,12 +290,6 @@ function resetData(){
   }
 }
 
-QRCode.toCanvas(
-  document.getElementById('qrCanvas'),
-  "https://devvvvvvv7.github.io/feedback/mobile.html",
-  { width: 160 }
-);
-
 let secret = "";
 const code = "admin";
 
@@ -281,12 +302,10 @@ document.addEventListener("keydown", function(e) {
     secret = "";
   }
 
-  // keep last 5 chars only
   if (secret.length > 5) {
     secret = secret.slice(-5);
   }
 });
-
 </script>
 
 </body>
